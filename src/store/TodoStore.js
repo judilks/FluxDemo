@@ -1,52 +1,55 @@
 import {ReduceStore} from 'flux/utils'
-import {EventEmitter} from 'events'
 import dispatcher from '../dispatcher/dispatcher'
+import TodoList from '../components/list/TodoList';
 
-class TodoStore extends EventEmitter {
+class TodoStore extends ReduceStore {
 
-    constructor(){
-        super()
-        this.todos = [
-            {
-                name:'task1'
-            },
-            {
-                name:'task2'
+    constructor(dispatcher){
+        super(dispatcher)
+        this.state = {
+            todos:[
+                {
+                    name:'task1'
+                },
+                {
+                    name:'task2'
+                }
+            ]
+        }       
+    }
+
+    getInitialState() {
+        return this.state
+    }
+    
+    reduce(state, action) {
+        switch (action.type) {
+            case 'CREATE_TODO':{
+                return this.create(action.todo)
             }
-        ]
+
+            case 'DELETE_TODO':{
+                return this.delete(action.todo)
+            }    
+            default:{
+                return state;
+            }
+            
+        }
     }
 
-    getTodos = () => {
-        return this.todos;
-    }
+
 
     create = (todo) => {
-        this.todos.push(todo)
-        this.emit("CHANGED_TODOS")
+        return this.state.todos.push(todo)
     }
 
     delete = (currentTodo) => {
-        const val = this.todos.findIndex((todo) => {
+        const val = this.state.todos.findIndex((todo) => {
         return todo.name === currentTodo.name
      })
-        this.todos.splice(val, 1)
-        this.emit("CHANGED_TODOS")
-    }
-
-    handleActions = (action) =>{
-        switch(action.type){
-            case "CREATE_TODO":{
-                this.create(action.todo)
-                break
-            }
-            case "DELETE_TODO":{
-                this.delete(action.todo)
-            }
-        }
+        return this.state.todos.splice(val, 1)
     }
 }
 
-const todoStore = new TodoStore();
-dispatcher.register((action)=>todoStore.handleActions(action))
-
-export default todoStore
+export default new TodoStore(dispatcher);

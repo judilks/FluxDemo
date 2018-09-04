@@ -2,7 +2,7 @@ import dispatcher from "../dispatcher/dispatcher"
 
 class TodoActions {
     createTodo = (name) => {
-        return dispatcher.dispatch({
+        dispatcher.dispatch({
             type:"CREATE_TODO",
             todo: {
                 name:name
@@ -11,7 +11,7 @@ class TodoActions {
     }
 
     deleteTodo = (todo) => {
-        return dispatcher.dispatch({
+        dispatcher.dispatch({
             type:"DELETE_TODO",
             todo: todo
         })

@@ -8,15 +8,11 @@ class TodoList extends Component{
 
     constructor(props){
         super(props)
-        this.state = {
-            todos: TodoStore.getTodos()
-        }
+        this.state = TodoStore.getInitialState();
     }
 
     componentDidMount(){
-        TodoStore.on("CHANGED_TODOS",() => {
-            this.setState({todos: TodoStore.getTodos()})
-        })
+        TodoStore.addListener(this.getStateFromStore)
     }
 
     deleteTodo = (todo) => {
@@ -27,8 +23,13 @@ class TodoList extends Component{
         TodoActions.createTodo(todo)
     } 
 
+    getStateFromStore = () =>{
+        this.setState({state:TodoStore.getState()})
+    }
+
     render(){
         const {todos} = this.state
+        TodoStore.getState()
         return(
             <div>
                 <ol className='list-group'>
