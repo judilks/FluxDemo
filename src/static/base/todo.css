@@ -1,0 +1,8 @@
+.todo{
+    display:inline;
+    margin:10px;
+}
+
+.create-todo{
+    display:block;
+}
